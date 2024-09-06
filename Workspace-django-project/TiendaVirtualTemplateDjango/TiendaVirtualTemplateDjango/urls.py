@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from firstappTemplate.views import rendertemplate
+from firstappTemplate.views import infoUsuario, infoUsuarioImagen, rendertemplate, rendertemplatedata
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('render/', rendertemplate),
+    path('renderdata/', rendertemplatedata),
+    path('info/', infoUsuario),
+    path('infoImagen/', infoUsuarioImagen),
 ]

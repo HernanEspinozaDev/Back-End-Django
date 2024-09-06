@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>mi primer template</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    <h1 class="titulo">Información del usuario</h1>
+    <img class="foto" src="{% static 'images/luffy.png' %}">
+    <table class="data">
+        <tr>
+            <td>ID</td>
+            <td>{{id}}</td>
+        </tr>
+        <tr>
+            <td>Nombre</td>
+            <td>{{nombre}}</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{email}}</td>
+        </tr>
+    </table>
+</body>
+</html>
