@@ -16,12 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from moduloProyectoModelForm import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
     path('proyectos/', views.listadoProyectos),
+    path('proyectos/agregar/', views.agregarProyecto),
+    path('proyectos/eliminar/<int:id>', views.eliminarProyecto),
+    path('proyectos/actualizar/<int:id>', views.actualizarProyecto),
 
 ]
