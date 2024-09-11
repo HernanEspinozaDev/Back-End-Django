@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from .models import Vehiculo
 from .forms import VehiculoForm
@@ -17,10 +14,13 @@ def agregar_vehiculo(request):
     if request.method == 'POST':
         form = VehiculoForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('listar_vehiculos')
+            vehiculo = form.save(commit=False)
+            vehiculo.patente = form.cleaned_data['patente']
+            vehiculo.save()
+            return redirect('agregar_vehiculo')  # Recargar la página después de guardar
     else:
         form = VehiculoForm()
+    
     return render(request, 'agregarVehiculo.html', {'form': form, 'vehiculos': vehiculos})
 
 
