@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Vehículos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #e3f2fd; 
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Registro de Vehículos</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3 row">
+                    <label for="id_patente" class="col-sm-3 col-form-label">Patente:</label>
+                    <div class="col-sm-9">
+                        {{ form.patente }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_nro_chasis" class="col-sm-3 col-form-label">Nro. Chasis:</label>
+                    <div class="col-sm-9">
+                        {{ form.nro_chasis }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_nro_motor" class="col-sm-3 col-form-label">Nro. Motor:</label>
+                    <div class="col-sm-9">
+                        {{ form.nro_motor }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_modelo" class="col-sm-3 col-form-label">Modelo:</label>
+                    <div class="col-sm-9">
+                        {{ form.modelo }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_fecha_vencimiento" class="col-sm-3 col-form-label">Fecha de Venc. Rev. Técnica:</label>
+                    <div class="col-sm-9">
+                        {{ form.fecha_vencimiento }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_tipo_vehiculo" class="col-sm-3 col-form-label">Tipo de Vehículo:</label>
+                    <div class="col-sm-9">
+                        {{ form.tipo_vehiculo }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_marca" class="col-sm-3 col-form-label">Marca:</label>
+                    <div class="col-sm-9">
+                        {{ form.marca }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Posee Seguro:</label>
+                    <div class="col-sm-9">
+                        {{ form.posee_seguro }}
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="id_observaciones" class="col-sm-3 col-form-label">Observaciones:</label>
+                    <div class="col-sm-9">
+                        {{ form.observaciones }}
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Vehículos debajo del formulario -->
+        <div class="mt-5">
+            <h2 class="text-center">Lista de Vehículos</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Patente</th>
+                        <th>Tipo de Vehículo</th>
+                        <th>Nro Chasis</th>
+                        <th>Modelo</th>
+                        <th>Marca</th>
+                        <th>Fecha de Venc. Rev. Técnica</th>
+                        <th>Posee Seguro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vehiculo in vehiculos %}
+                    <tr>
+                        <td>{{ vehiculo.patente }}</td>
+                        <td>{{ vehiculo.tipo_vehiculo }}</td>
+                        <td>{{ vehiculo.nro_chasis }}</td>
+                        <td>{{ vehiculo.modelo }}</td>
+                        <td>{{ vehiculo.marca }}</td>
+                        <td>{{ vehiculo.fecha_vencimiento }}</td>
+                        <td>{{ vehiculo.posee_seguro }}</td>
+                        <td>
+                            <a href="{% url 'actualizar_vehiculo' vehiculo.id %}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="{% url 'eliminar_vehiculo' vehiculo.id %}" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
