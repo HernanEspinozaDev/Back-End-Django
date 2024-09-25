@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from apiRestDemo.views import employeeview, employeeviewBD
 from serialApp.views import student_list, student_detail
+from abvApp.views import StudentList, StudentDetail
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +28,7 @@ urlpatterns = [
     #api rest
     path('apistudents/', student_list),
     path('apistudents/<int:pk>', student_detail),
+    #api rest por clases
+    path('apistudentsclase/', StudentList.as_view()),
+    path('apistudentsclase/<int:pk>', StudentDetail.as_view()),
 ]

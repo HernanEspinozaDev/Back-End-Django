@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'apiRestDemo',
     'serialApp',
+    'abvApp'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'BaseEmpleado',
         'USER': 'root',
-        'PASSWORD': '12345'
+        'PASSWORD': 'admin'
     }
 }
 
