@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+{% load static %}
+{% load custom_tags %}
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>Administración de Reservas</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+        .form-container, .table-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.5s;
+        }
+        .btn-custom {
+            margin: 0 5px;
+        }
+        .qr-code img {
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: white;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">🗂️ Administración de Reservas</h1>
+            <p class="lead text-muted">Gestiona tus reservas de forma eficiente y moderna.</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="form-container mb-5">
+            <h3 class="text-center mb-4">Agregar Reserva</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {% for field in form %}
+                    <div class="col-md-6">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                        {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                        <i class="bi bi-save-fill"></i> Guardar Reserva
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Resultados -->
+        {% if reservas %}
+        <div class="table-container">
+            <h3 class="text-center mb-4">Listado de Reservas</h3>
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Edad</th>
+                        <th>Fecha Solicitud</th>
+                        <th>Fecha Reserva</th>
+                        <th>Hora Reserva</th>
+                        <th>Website</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                        <th class="text-center">QR Code</th>
+                        <th class="text-center">PDF</th>
+                        <th class="text-center">QR PDF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                    <tr>
+                        <td>{{ reserva.nombre }}</td>
+                        <td>{{ reserva.telefono }}</td>
+                        <td>{{ reserva.fecha_nacimiento }}</td>
+                        <td>{{ reserva.edad }}</td>
+                        <td>{{ reserva.fecha_creacion }}</td>
+                        <td>{{ reserva.fechareserva }}</td>
+                        <td>{{ reserva.horareserva }}</td>
+                        <td>
+                            <a href="{{ reserva.website }}" target="_blank" class="btn btn-link">
+                                <i class="bi bi-globe"></i> Sitio Web
+                            </a>
+                        </td>
+                        <td>{{ reserva.email }}</td>
+                        <td>{{ reserva.estadoReservaId }}</td>
+                        <td class="text-center">
+                            <a href="../actualizarReserva/{{ reserva.idSolicitud }}" class="btn btn-warning btn-sm btn-custom shadow-sm">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="../eliminarReserva/{{ reserva.idSolicitud }}" class="btn btn-danger btn-sm btn-custom shadow-sm">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </td>
+                        <td class="text-center qr-code">
+                            {% if reserva.qr_code %}
+                            <img src="{{ reserva.qr_code.url }}" alt="Código QR" width="80">
+                            {% else %}
+                            <span class="text-muted">No disponible</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'generar_pdf' reserva.idSolicitud %}" class="btn btn-info btn-sm shadow-sm">
+                                <i class="bi bi-file-earmark-pdf-fill"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'generar_qr_pdf' reserva.idSolicitud %}" class="btn btn-secondary btn-sm shadow-sm">
+                                <i class="bi bi-file-earmark-pdf-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">No se encuentran reservas en el sistema</div>
+        {% endif %}
+    </div>
+
+    <!-- Modal de Confirmación -->
+    {% if messages %}
+    <div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            {% for message in messages %}
+            <h5 class="modal-title" id="confirmacionModalLabel"><i class="bi bi-check-circle-fill text-success"></i> {{ message }}</h5>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            Tu reserva ha sido confirmada exitosamente.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <!-- Script para mostrar el modal -->
+    {% if messages %}
+    <script>
+        var confirmacionModal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+        confirmacionModal.show();
+    </script>
+    {% endif %}
+</body>
+</html>
